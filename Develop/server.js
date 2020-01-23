@@ -13,14 +13,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-const fs = require('fs')
+const fs = require('fs');
+const shortid = require('shortid');
 const db = path.join(__dirname, "db/db.json");
-let notes; 
 //reads from db.json
+let notes; 
 fs.readFile(db, 'utf8', (err, data) => {
   if (err) throw err;
   notes = JSON.parse(data);
 });
+
 // Routes
 // =============================================================
 // Basic route that sends the user first to the AJAX Page
@@ -59,18 +61,15 @@ app.get("/api/notes/:note", function(req, res) {
 app.post("/api/notes", function(req, res) {
   let newNote = req.body;
 
-  let count = 0;
-  
-
-  newNote.id = count++;
+  newNote.id = shortid.generate();
 
   console.log(newNote);
   
-  fs.appendFile(db, 'newNote', err => {
-    if (err) throw err;
-    console.log('saved!')
-  })
-  //notes.push(newNote);
+  // fs.appendFile(db, JSON.stringify(newNote), err => {
+  //   if (err) throw err;
+  //   console.log('saved!')
+  // })
+  notes.push(newNote);
   res.json(newNote);
 })
 //api/note/:id
