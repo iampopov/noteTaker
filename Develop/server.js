@@ -17,12 +17,10 @@ const fs = require('fs');
 const shortid = require('shortid');
 const db = path.join(__dirname, "db/db.json");
 //reads from db.json
-let notes; 
-fs.readFile(db, 'utf8', (err, data) => {
+let readNotes = fs.readFile(db, 'utf8', (err, data) => {
   if (err) throw err;
-  notes = JSON.parse(data);
+  readNotes = JSON.parse(data);
 });
-
 // Routes
 // =============================================================
 // Basic route that sends the user first to the AJAX Page
@@ -38,7 +36,7 @@ app.get("/", function(req, res) {
 
 // Displays all notes
 app.get("/api/notes", function(req, res) {
-  return res.json(notes);
+  res.json(readNotes);
 });
 
 
@@ -46,12 +44,12 @@ app.get("/api/notes", function(req, res) {
 //Display single note
 app.get("/api/notes/:note", function(req, res) {
   const chosen = req.params.note;
-
+  
   //console.log(chosen);
 
-  for (let i=0; i<notes.length; i++) {
-    if (chosen === notes[i].noteName) {
-      return res.json(notes[i]);
+  for (let i=0; i<readNotes.length; i++) {
+    if (chosen === readNotes[i].noteName) {
+      return res.json(readNotes[i]);
     }
   }
   return res.json(false);
@@ -60,18 +58,25 @@ app.get("/api/notes/:note", function(req, res) {
 //Create new note
 app.post("/api/notes", function(req, res) {
   let newNote = req.body;
-
   newNote.id = shortid.generate();
 
-  console.log(newNote);
-  
-  // fs.appendFile(db, JSON.stringify(newNote), err => {
-  //   if (err) throw err;
-  //   console.log('saved!')
-  // })
-  notes.push(newNote);
-  res.json(newNote);
+  fs.readFile(db, 'utf8', (err, data) => {
+    if (err) throw err;
+    else {
+      writeNote = JSON.parse(data);
+      writeNote.push(newNote);
+      json = JSON.stringify(writeNote);
+      fs.writeFile(db, json, cb => { 
+        if (err) throw err
+        res.end()
+      });
+      
+    }
+  });
 })
+
+
+
 //api/note/:id
 
 //const chosen = req.params.id;
@@ -80,11 +85,13 @@ app.post("/api/notes", function(req, res) {
 //delete .splice() at certain location
 app.delete("/api/notes/:id", function(req, res) {
   const deletingNote = req.params.id;
-  console.log(deletingNote)
+  //console.log(deletingNote)
+  
+  //notes.splice(deletingNote, 1)
+  const remove = notes.map(item => item.id).indexOf(deletingNote)
+  remove && notes.splice(remove, 1)
 
-  //note.spice(deletingNote)
-
-
+  res.json(req.body)
 })
 // Listener
 // ===========================================================
