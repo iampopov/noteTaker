@@ -53,6 +53,7 @@ var renderActiveNote = function() {
 
 // Get the note data from the inputs, save it to the db and update the view
 var handleNoteSave = function() {
+  location.reload();
   var newNote = {
     title: $noteTitle.val(),
     text: $noteText.val()
@@ -78,6 +79,7 @@ var handleNoteDelete = function(event) {
   }
 
   deleteNote(note.id).then(function() {
+    location.reload();
     getAndRenderNotes();
     renderActiveNote();
   });
@@ -131,8 +133,8 @@ var renderNoteList = function(notes) {
 var getAndRenderNotes = function() {
   //console.log('hit!')
   return getNotes().then(function(data) {
+    //
     renderNoteList(data);
-    //console.log(data);
   });
 };
 
