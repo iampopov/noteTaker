@@ -58,7 +58,7 @@ app.get("/api/notes/:note", function(req, res) {
 //Create new note
 app.post("/api/notes", function(req, res) {
   let newNote = req.body;
-  let timestamp = new Date().getUTCMilliseconds();
+  
   newNote.id = shortid.generate();
   
     fs.readFile(db, 'utf8', (err, data) => {
