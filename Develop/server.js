@@ -75,37 +75,29 @@ app.post("/api/notes", function(req, res) {
     }
   });
 })
-//api/note/:id
 
-//const chosen = req.params.id;
-
-//splice(id)
-//delete .splice() at certain location
+//deleting note at clicked position
 app.delete("/api/notes/:id", function(req, res) {
   const deletingNote = req.params.id;
-  //console.log(deletingNote)
+  
   fs.readFile(db, 'utf8', (err, data) => {
     if (err) throw err;
     else {
       data = JSON.parse(data)
-      //console.log(data) //.indexOf(deletingNote))
+      
       index = data.findIndex(x => x.id === deletingNote)
-      console.log(index)
-      console.log(data)
+      
       data.splice(index, 1)
-      console.log(data)
+      
       json = JSON.stringify(data)
-      // let remove = data.map(item => item.id).indexOf(deletingNote)
-      // remove && data.splice(remove, 1)
+      
       fs.writeFile(db, json, cb => { 
         if (err) throw err
         res.end()
       });
       
     }});
-  
-  
-  //res.json(req.body)
+    
 })
 // Listener
 // =================    ==========================================
