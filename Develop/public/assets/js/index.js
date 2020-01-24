@@ -132,7 +132,7 @@ var getAndRenderNotes = function() {
   //console.log('hit!')
   return getNotes().then(function(data) {
     renderNoteList(data);
-    console.log(data);
+    //console.log(data);
   });
 };
 

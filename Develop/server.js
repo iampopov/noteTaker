@@ -58,6 +58,7 @@ app.get("/api/notes/:note", function(req, res) {
 //Create new note
 app.post("/api/notes", function(req, res) {
   let newNote = req.body;
+  
   newNote.id = shortid.generate();
 
   fs.readFile(db, 'utf8', (err, data) => {
@@ -74,9 +75,6 @@ app.post("/api/notes", function(req, res) {
     }
   });
 })
-
-
-
 //api/note/:id
 
 //const chosen = req.params.id;
@@ -86,15 +84,31 @@ app.post("/api/notes", function(req, res) {
 app.delete("/api/notes/:id", function(req, res) {
   const deletingNote = req.params.id;
   //console.log(deletingNote)
+  fs.readFile(db, 'utf8', (err, data) => {
+    if (err) throw err;
+    else {
+      data = JSON.parse(data)
+      //console.log(data) //.indexOf(deletingNote))
+      index = data.findIndex(x => x.id === deletingNote)
+      console.log(index)
+      console.log(data)
+      data.splice(index, 1)
+      console.log(data)
+      json = JSON.stringify(data)
+      // let remove = data.map(item => item.id).indexOf(deletingNote)
+      // remove && data.splice(remove, 1)
+      fs.writeFile(db, json, cb => { 
+        if (err) throw err
+        res.end()
+      });
+      
+    }});
   
-  //notes.splice(deletingNote, 1)
-  const remove = notes.map(item => item.id).indexOf(deletingNote)
-  remove && notes.splice(remove, 1)
-
-  res.json(req.body)
+  
+  //res.json(req.body)
 })
 // Listener
-// ===========================================================
+// =================    ==========================================
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
   });
