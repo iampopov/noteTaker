@@ -61,7 +61,7 @@ var handleNoteSave = function() {
 
   saveNote(newNote).then(function(data) {
     //getAndRenderNotes();
-    setTimeout(getAndRenderNotes, 550)
+    setTimeout(getAndRenderNotes, 450)
     renderActiveNote();
   });
 };
@@ -82,7 +82,7 @@ var handleNoteDelete = function(event) {
   deleteNote(note.id).then(function() {
     //location.reload();
     //getAndRenderNotes();
-    setTimeout(getAndRenderNotes, 550)
+    setTimeout(getAndRenderNotes, 450)
     renderActiveNote();
   });
 };

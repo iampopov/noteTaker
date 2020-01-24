@@ -63,7 +63,6 @@ app.post("/api/notes", function(req, res) {
   
     fs.readFile(db, 'utf8', (err, data) => {
     if (err) throw err;
-    else {
       writeNote = JSON.parse(data);
       writeNote.push(newNote);
       json = JSON.stringify(writeNote);
@@ -71,8 +70,6 @@ app.post("/api/notes", function(req, res) {
         if (err) throw err
         res.end()
       });
-      
-    }
   });
 })
 
@@ -82,7 +79,6 @@ app.delete("/api/notes/:id", function(req, res) {
   
   fs.readFile(db, 'utf8', (err, data) => {
     if (err) throw err;
-    else {
       data = JSON.parse(data)
       
       index = data.findIndex(x => x.id === deletingNote)
@@ -95,8 +91,7 @@ app.delete("/api/notes/:id", function(req, res) {
         if (err) throw err
         res.end()
       });
-      
-    }});
+      });
     
 })
 // Listener
