@@ -15,7 +15,7 @@ app.use(express.static("public"));
 
 const fs = require('fs');
 const shortid = require('shortid');
-const db = path.join(__dirname, "db/db.json");
+const db = path.join(__dirname, "/db/db.json");
 //reads from db.json
 let readNotes = fs.readFile(db, 'utf8', (err, data) => {
   if (err) throw err;
