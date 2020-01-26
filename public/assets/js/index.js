@@ -61,7 +61,7 @@ var handleNoteSave = function() {
 
   saveNote(newNote).then(function(data) {
     //getAndRenderNotes();
-    setTimeout(getAndRenderNotes, 450)
+    setTimeout(getAndRenderNotes, 550)
     renderActiveNote();
   });
 };
