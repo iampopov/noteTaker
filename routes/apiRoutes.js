@@ -1,39 +1,48 @@
 const fs = require('fs');
 const path = require("path");
-const db = path.join(__dirname, "../db/db.json");
-//reads from db.json
-let readNotes = fs.readFile(db, 'utf8', (err, data) => {
-  if (err) throw err;
-  readNotes = JSON.parse(data);
-});
+const filePath = path.join(__dirname, "../db/db.json");
+const db = require("../db/db.json");
 const shortid = require('shortid');
 
 module.exports = function(app) {
 
 // Displays all notes
 app.get("/api/notes", function(req, res) {
-    return res.json(readNotes);
+    return res.json(db);
 });
 
 //Create new note
 app.post("/api/notes", function(req, res) {
-    let newNote = req.body;
+    const newNote = req.body;
     newNote.id = shortid.generate();
     
-    fs.readFile(db, 'utf8', (err, data) => {
-        if (err) throw err;
-            writeNote = JSON.parse(data);
-            writeNote.push(newNote);
-            json = JSON.stringify(writeNote);
-            fs.writeFile(db, json, err => { 
-            if (err) throw err
-            console.log(writeNote);
-            return res.json(writeNote);
-        });
-    });
-});
+    db.push(newNote);
 
-//Display single note
+    fs.writeFile(filePath, JSON.stringify(db), err => {
+        if (err) throw err;
+        console.log("Note added");
+        });
+        res.send(newNote);
+});
+  //deleting note at clicked position
+app.delete("/api/notes/:id", function(req, res) {
+ const id = req.params.id;
+ 
+ for (let note of db) {
+     if (id === note.id) {
+         const noteIndex = db.indexOf(note);
+         db.splice(noteIndex, 1);
+         fs.writeFile(filePath, JSON.stringify(db), err => {
+             if (err) throw err;
+             console.log('Note deleted');
+        });
+        res.end()
+     }
+ }
+ 
+      
+  })
+  //Display single note
 app.get("/api/notes/:note", function(req, res) {
     const chosen = req.params.note;
     for (let i=0; i<readNotes.length; i++) {
@@ -43,28 +52,5 @@ app.get("/api/notes/:note", function(req, res) {
     }
     return res.json(false);
   });
-  
-  
 
-
-  //deleting note at clicked position
-app.delete("/api/notes/:id", function(req, res) {
-    
- fs.readFile(db, 'utf8', (err, data) => {
-      if (err) throw err;
-        data = JSON.parse(data)
-        
-        index = data.findIndex(x => x.id === req.params.id)
-        
-        data.splice(index, 1)
-        
-        json = JSON.stringify(data)
-        
-        fs.writeFile(db, json, cb => { 
-          if (err) throw err
-          res.end()
-        });
-    });
-      
-  })
 };
